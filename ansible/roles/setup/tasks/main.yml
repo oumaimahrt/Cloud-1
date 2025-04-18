@@ -1,8 +1,20 @@
 - name: Install required packages
   apt:
-    name: ['docker.io', 'docker-compose', 'python3-pip', 'ufw']
+    name: ['docker.io', 'python3-pip', 'ufw']
     state: present
     update_cache: yes
+
+- name: Install Docker Compose v2
+  ansible.builtin.command:
+    cmd: curl -SL https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+  args:
+    creates: /usr/local/bin/docker-compose
+
+- name: Set executable permissions for Docker Compose
+  file:
+    path: /usr/local/bin/docker-compose
+    mode: '0755'
+    state: file
 
 - name: Enable Docker service
   systemd:
@@ -22,4 +34,3 @@
   ufw:
     state: enabled
     policy: allow
-
