@@ -1,0 +1,7 @@
+- name: Ensure /home/ubuntu/data/mariadb directory exists
+  file:
+    path: /home/ubuntu/data/mariadb
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'

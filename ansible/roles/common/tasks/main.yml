@@ -1,0 +1,20 @@
+- name: Ensure /home/ubuntu/data/wordpress directory exists
+  file:
+    path: /home/ubuntu/data/wordpress
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Ensure /home/ubuntu/data/mariadb directory exists
+  file:
+    path: /home/ubuntu/data/mariadb
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Reboot the server after deployment
+  reboot:
+    msg: "Rebooting to apply changes"
+    reboot_timeout: 600

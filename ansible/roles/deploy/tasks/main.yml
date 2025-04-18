@@ -1,0 +1,104 @@
+---
+- name: Ensure /home/ubuntu/data/wordpress directory exists
+  file:
+    path: /home/ubuntu/data/wordpress
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Ensure /home/ubuntu/data/mariadb directory exists
+  file:
+    path: /home/ubuntu/data/mariadb
+    state: directory
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Copy Dockerized WordPress project to remote server
+  copy:
+    src: "{{ playbook_dir }}/../inception/src/"
+    dest: /home/ubuntu/src/
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Ensure docker-compose is installed on the remote server
+  package:
+    name: docker-compose
+    state: present
+
+- name: Install community.docker collection
+  ansible.builtin.command:
+    cmd: ansible-galaxy collection install community.docker
+  changed_when: false
+
+# Replace the following task
+# - name: Run Docker Compose to start the WordPress site
+#   community.docker.docker_compose_v2:
+#     project_src: /home/ubuntu/src/
+#     state: present
+#     recreate: true
+#     remove_orphans: true
+
+# With this updated task
+- name: Run Docker Compose to start the WordPress site
+  community.docker.docker_compose:
+    project_src: /home/ubuntu/src/
+    state: present
+    recreate: true
+    remove_orphans: true
+
+# - name: Enable UFW firewall and allow OpenSSH
+#   ufw:
+#     state: enabled
+#     rule: allow
+#     name: 'OpenSSH'
+
+# - name: Allow HTTP (80) port in UFW
+#   ufw:
+#     state: enabled
+#     rule: allow
+#     port: 80
+#     proto: tcp
+
+# - name: Allow HTTPS (443) port in UFW
+#   ufw:
+#     state: enabled
+#     rule: allow
+#     port: 443
+#     proto: tcp
+
+# - name: Allow port 3306 (MySQL) only on localhost (security)
+#   ufw:
+#     rule: allow
+#     from_ip: 127.0.0.1
+#     to_port: 3306
+#     proto: tcp
+
+# - name: Enable UFW firewall and allow OpenSSH
+#   ufw:
+#     state: enabled
+#     rule: allow
+#     name: 'OpenSSH'
+
+# - name: Allow HTTP (80) port in UFW
+#   ufw:
+#     state: enabled
+#     rule: allow
+#     port: 80
+#     proto: tcp
+
+# - name: Allow HTTPS (443) port in UFW
+#   ufw:
+#     state: enabled
+#     rule: allow
+#     port: 443
+#     proto: tcp
+
+# - name: Allow port 3306 (MySQL) only on localhost (security)
+#   ufw:
+#     rule: allow
+#     from_ip: 127.0.0.1
+#     to_port: 3306
+#     proto: tcp

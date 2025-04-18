@@ -1,0 +1,28 @@
+- name: Copy Dockerized WordPress project to remote server
+  copy:
+    src: "{{ playbook_dir }}/../inception/src/"
+    dest: /home/ubuntu/src/
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'
+
+- name: Ensure docker-compose is installed on the remote server
+  package:
+    name: docker-compose
+    state: present
+
+- name: Run Docker Compose to start the WordPress site
+  shell: docker-compose --env-file .env up -d --force-recreate --remove-orphans
+  args:
+    chdir: /home/ubuntu/src/
+  async: 600
+  poll: 0
+  register: docker_compose_job
+
+- name: Wait for Docker Compose job to complete
+  async_status:
+    jid: "{{ docker_compose_job.ansible_job_id }}"
+  register: job_result
+  until: job_result.finished
+  retries: 30
+  delay: 10

@@ -1,0 +1,25 @@
+- name: Install required packages
+  apt:
+    name: ['docker.io', 'docker-compose', 'python3-pip', 'ufw']
+    state: present
+    update_cache: yes
+
+- name: Enable Docker service
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Allow SSH and HTTP through UFW
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+  loop:
+    - "22"
+    - "80"
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+    policy: allow
+
