@@ -30,7 +30,11 @@
     - "22"
     - "80"
 
-- name: Enable UFW
-  ufw:
-    state: enabled
-    policy: allow
+- name: Add current user to the docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+
+- name: Reset ssh connection
+  meta: reset_connection

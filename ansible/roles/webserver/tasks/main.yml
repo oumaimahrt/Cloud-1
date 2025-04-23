@@ -6,23 +6,33 @@
     group: ubuntu
     mode: '0755'
 
-- name: Ensure docker-compose is installed on the remote server
+- name: Ensure docker is installed on the remote server
   package:
-    name: docker-compose
+    name: docker.io
     state: present
 
-- name: Run Docker Compose to start the WordPress site
-  shell: docker-compose --env-file .env up -d --force-recreate --remove-orphans
-  args:
-    chdir: /home/ubuntu/src/
-  async: 600
-  poll: 0
-  register: docker_compose_job
+- name: Create directory for Docker CLI plugins
+  file:
+    path: /usr/libexec/docker/cli-plugins
+    state: directory
+    mode: '0755'
 
-- name: Wait for Docker Compose job to complete
-  async_status:
-    jid: "{{ docker_compose_job.ansible_job_id }}"
-  register: job_result
-  until: job_result.finished
-  retries: 30
-  delay: 10
+- name: Install Docker Compose plugin
+  ansible.builtin.command:
+    cmd: curl -SL https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-linux-x86_64 -o /usr/libexec/docker/cli-plugins/docker-compose
+  args:
+    creates: /usr/libexec/docker/cli-plugins/docker-compose
+
+- name: Set executable permissions for Docker Compose plugin
+  file:
+    path: /usr/libexec/docker/cli-plugins/docker-compose
+    mode: '0755'
+    state: file
+
+
+- name: Run Docker Compose to start the WordPress site
+  community.docker.docker_compose_v2:
+    project_src: /home/ubuntu/src/
+    state: present
+    recreate: auto
+    remove_orphans: true

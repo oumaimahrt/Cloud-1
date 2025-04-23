@@ -46,11 +46,6 @@
     mode: '0755'
     state: file
 
-- name: Install community.docker collection
-  ansible.builtin.command:
-    cmd: ansible-galaxy collection install community.docker
-  changed_when: false
-
 - name: Run Docker Compose to start the WordPress site
   community.docker.docker_compose_v2:
     project_src: /home/ubuntu/src/
@@ -84,7 +79,10 @@
 #     from_ip: 127.0.0.1
 #     to_port: 3306
 #     proto: tcp
-
+# - name: Enable UFW
+#   ufw:
+#     state: enabled
+#     policy: allow
 # - name: Enable UFW firewall and allow OpenSSH
 #   ufw:
 #     state: enabled
@@ -100,7 +98,10 @@
 
 # - name: Allow HTTPS (443) port in UFW
 #   ufw:
-#     state: enabled
+#     state: - name: Enable UFW
+  # ufw:
+  #   state: enabled
+  #   policy: allowenabled
 #     rule: allow
 #     port: 443
 #     proto: tcp

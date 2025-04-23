@@ -26,7 +26,7 @@ define( 'DB_NAME', 'wordpress_database' );
 define( 'DB_USER', 'kait-mar' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', 'login123' );
+define( 'DB_PASSWORD', '${DB_PASSWORD}' );
 
 /** MySQL hostname */
 define( 'DB_HOST', 'mariadb' );

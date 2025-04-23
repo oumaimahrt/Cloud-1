@@ -13,8 +13,3 @@
     owner: ubuntu
     group: ubuntu
     mode: '0755'
-
-- name: Reboot the server after deployment
-  reboot:
-    msg: "Rebooting to apply changes"
-    reboot_timeout: 600

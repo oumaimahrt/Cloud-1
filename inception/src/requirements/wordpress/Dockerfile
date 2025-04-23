@@ -1,4 +1,7 @@
 FROM debian:buster
+ENV DB_USER=${DB_USER}
+ENV DB_PASSWORD=${DB_PASSWORD}
+RUN echo $DB_USER $DB_PASSWORD
 RUN apt-get update -y 
 RUN apt-get upgrade -y
 RUN apt-get install -y  php7.3 php-fpm php-mysqli mariadb-client
