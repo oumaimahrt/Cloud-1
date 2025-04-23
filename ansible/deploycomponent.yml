@@ -3,7 +3,7 @@
   hosts: all
   become: yes
   vars:
-    components: []  # Pass as extra-vars: -e 'components=["mariadb","wordpress"]'
+    components: []  # Pass as extra-vars: -e 'components=["mariadb","wordpress"]' this cmd
   
   pre_tasks:
     - name: Validate components variable
