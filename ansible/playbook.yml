@@ -1,15 +1,10 @@
-
 - hosts: web
   become: yes
   roles:
     - setup
+    - mariadb
+    - wordpress
+    - nginx
     - deploy
-# - hosts: all
-#   become: yes
-#   roles:
-#     - setup
-#     - common
-#     - webserver
-#     - database
 
 

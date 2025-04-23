@@ -1,7 +1,4 @@
 FROM debian:buster
-ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
-RUN echo $DB_USER $DB_PASSWORD
 RUN apt-get update -y 
 RUN apt-get upgrade -y
 RUN apt-get install -y  php7.3 php-fpm php-mysqli mariadb-client
@@ -12,4 +9,6 @@ COPY conf/wp-config.php /var/www/html/wordpress
 COPY conf/www.conf /etc/php/7.3/fpm/pool.d/
 RUN chown -R www-data:www-data /var/www/html/wordpress/
 RUN mkdir ./run/php/
-CMD ./usr/sbin/php-fpm7.3 -F
+COPY conf/start.sh /start.sh
+RUN chmod +x /start.sh
+CMD ["/start.sh"]

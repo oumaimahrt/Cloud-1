@@ -1,0 +1,7 @@
+- name: Copy nginx folder
+  copy:
+    src: "{{ playbook_dir }}/../inception/src/requirements/nginx/"
+    dest: /home/ubuntu/src/requirements/nginx/
+    owner: ubuntu
+    group: ubuntu
+    mode: '0755'

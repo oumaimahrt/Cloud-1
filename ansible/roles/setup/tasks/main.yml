@@ -22,14 +22,6 @@
     enabled: yes
     state: started
 
-- name: Allow SSH and HTTP through UFW
-  ufw:
-    rule: allow
-    port: "{{ item }}"
-  loop:
-    - "22"
-    - "80"
-
 - name: Add current user to the docker group
   ansible.builtin.user:
     name: "{{ ansible_user }}"

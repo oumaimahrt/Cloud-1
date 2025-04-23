@@ -1,0 +1,35 @@
+---
+- name: Deploy specific components
+  hosts: all
+  become: yes
+  vars:
+    components: []  # Pass as extra-vars: -e 'components=["mariadb","wordpress"]'
+  
+  pre_tasks:
+    - name: Validate components variable
+      ansible.builtin.fail:
+        msg: "No components specified. Please run with -e 'components=[\"component1\",\"component2\"]'"
+      when: components | length == 0
+
+  roles:
+    - setup
+  
+  tasks:
+    - name: Set services variable
+      set_fact:
+        docker_services: "{{ components }}"
+
+    - name: Include component roles
+      include_role:
+        name: "{{ item }}"
+      with_items: "{{ components }}"
+      when: components | length > 0
+    
+    - name: Restart specified containers 
+      community.docker.docker_compose_v2:
+        project_src: ./src
+        services: "{{ docker_services }}"
+        build: always
+        recreate: always
+      when: components | length > 0
+      
